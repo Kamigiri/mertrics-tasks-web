@@ -48,7 +48,7 @@ export interface Task {
   /** Additional definitions or details. */
   notes?: string;
   /** Timestamp when the task was completed (ISO string). */
-  completed?: string;
+  completedAt?: string;
   /** ID of the parent task if this is a subtask. */
   parent?: string;
   /** Positioning string for ordering tasks. */
