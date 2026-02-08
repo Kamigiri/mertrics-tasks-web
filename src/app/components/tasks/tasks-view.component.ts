@@ -39,6 +39,7 @@ import { TasksService } from '../../services/tasks.service';
             <app-task-list 
               [title]="currentTitle()" 
               [tasks]="currentTasks()"
+              [listId]="currentTasks().length > 0 ? currentTasks()[0].listId : ''"
               (syncCompleted)="onSyncCompleted()">
             </app-task-list>
           }
