@@ -26,6 +26,7 @@ import { TasksService } from '../../../services/tasks.service';
 })
 export class TaskItemComponent {
   readonly task = input.required<Task>();
+  readonly isDraggable = input<boolean>(true);
 
   private readonly dialog = inject(MatDialog);
   private readonly tasksService = inject(TasksService);

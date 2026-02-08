@@ -2,10 +2,13 @@
   class="group flex items-center gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:shadow-md transition-all duration-200 cursor-pointer mb-2"
   [class.opacity-60]="task().status === 'completed'" matRipple (click)="onItemClick($event)"
   (mousedown)="onMouseDown()">
+  @if (isDraggable()) { 
   <!-- Drag Handle (Visible on Hover) -->
   <div class="text-slate-300 opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity">
     <mat-icon class="scale-75">drag_indicator</mat-icon>
   </div>
+  }
+
 
   <!-- Checkbox -->
   <mat-checkbox [checked]="task().status === 'completed'" (change)="onStatusChange()" color="primary"
