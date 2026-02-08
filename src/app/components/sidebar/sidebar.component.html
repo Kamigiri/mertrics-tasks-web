@@ -1,0 +1,82 @@
+<div class="h-full flex flex-col bg-slate-50 border-r border-slate-200">
+    <!-- App Title/Header -->
+    <div class="p-6 pb-4 flex flex-col gap-1">
+        <div class="flex items-baseline gap-2 cursor-pointer select-none">
+            <h1 class="text-xl font-bold transition-all duration-300" [class.bg-gradient-to-r]="viewMode() === 'tasks'"
+                [class.from-purple-600]="viewMode() === 'tasks'" [class.to-pink-600]="viewMode() === 'tasks'"
+                [class.bg-clip-text]="viewMode() === 'tasks'" [class.text-transparent]="viewMode() === 'tasks'"
+                [class.text-slate-400]="viewMode() !== 'tasks'" [class.scale-105]="viewMode() === 'tasks'"
+                (click)="setMode('tasks')">
+                Mertrics Tasks
+            </h1>
+        </div>
+        <div class="flex items-baseline gap-2 cursor-pointer select-none">
+            <h1 class="text-xl font-bold transition-all duration-300" [class.bg-gradient-to-r]="viewMode() === 'habits'"
+                [class.from-green-600]="viewMode() === 'habits'" [class.to-teal-600]="viewMode() === 'habits'"
+                [class.bg-clip-text]="viewMode() === 'habits'" [class.text-transparent]="viewMode() === 'habits'"
+                [class.text-slate-400]="viewMode() !== 'habits'" [class.scale-105]="viewMode() === 'habits'"
+                (click)="setMode('habits')">
+                Mertrics Habits
+            </h1>
+        </div>
+    </div>
+
+    @if (viewMode() === 'tasks') {
+    <!-- Smart Filters -->
+    <mat-nav-list class="px-2">
+        <a mat-list-item (click)="navigateTo('/tasks/today')" [activated]="selectedId() === 'today'"
+            class="rounded-full overflow-hidden mb-1 hover:bg-purple-50 transition-colors">
+            <mat-icon matListItemIcon class="text-purple-600">today</mat-icon>
+            <span matListItemTitle class="font-medium">Today</span>
+        </a>
+        <a mat-list-item (click)="navigateTo('/tasks/upcoming')" [activated]="selectedId() === 'upcoming'"
+            class="rounded-full overflow-hidden mb-1 hover:bg-purple-50 transition-colors">
+            <mat-icon matListItemIcon class="text-indigo-600">event</mat-icon>
+            <span matListItemTitle class="font-medium">Upcoming</span>
+        </a>
+        <a mat-list-item (click)="navigateTo('/tasks/all')" [activated]="selectedId() === 'all'"
+            class="rounded-full overflow-hidden mb-1 hover:bg-purple-50 transition-colors">
+            <mat-icon matListItemIcon class="text-slate-600">assignment</mat-icon>
+            <span matListItemTitle class="font-medium">All Tasks</span>
+        </a>
+    </mat-nav-list>
+
+    <mat-divider class="my-2 mx-4 !w-auto"></mat-divider>
+
+    <!-- Task Lists -->
+    <div class="pl-6 pr-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        My Lists
+    </div>
+
+    <mat-nav-list class="px-2 flex-1 overflow-y-auto">
+        @for (list of taskLists(); track list.id) {
+        <a mat-list-item (click)="navigateToList(list.id)" [activated]="selectedId() === list.id"
+            class="rounded-full overflow-hidden mb-1 hover:bg-purple-50 transition-colors">
+            <mat-icon matListItemIcon class="text-slate-400">list</mat-icon>
+            <span matListItemTitle class="font-medium truncate">{{ list.title }}</span>
+            <span matListItemMeta class="text-xs text-slate-400" *ngIf="list.tasks.length">
+                {{ list.tasks.length }}
+            </span>
+        </a>
+        }
+    </mat-nav-list>
+    } @else {
+    <!-- Habits Mode Content -->
+    <mat-nav-list class="px-2">
+        <a mat-list-item (click)="navigateTo('/habits')" [activated]="selectedId() === 'habits'"
+            class="rounded-full overflow-hidden mb-1 hover:bg-purple-50 transition-colors">
+            <mat-icon matListItemIcon class="text-green-600">spa</mat-icon>
+            <span matListItemTitle class="font-medium">Active Habits</span>
+        </a>
+    </mat-nav-list>
+    }
+
+    <!-- Footer Actions -->
+    <div class="mt-auto border-t border-slate-200 p-4">
+        <button mat-flat-button class="w-full !rounded-full" color="primary" (click)="onSync()">
+            <mat-icon>sync</mat-icon>
+            Sync
+        </button>
+    </div>
+
+</div>

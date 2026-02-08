@@ -1,0 +1,92 @@
+<h2 mat-dialog-title>
+    {{ isEditMode ? 'Edit Habit' : 'New Habit' }}
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="form" class="flex flex-col gap-4 mt-2">
+        <!-- Title -->
+        <mat-form-field class="w-full">
+            <mat-label>Habit Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g. Morning Meditation" cdkFocusInitial>
+            <mat-error *ngIf="form.get('title')?.hasError('required')">
+                Title is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Frequency & Goal Row -->
+        <div class="flex gap-4">
+            <mat-form-field class="flex-1">
+                <mat-label>Frequency</mat-label>
+                <select matNativeControl formControlName="frequency">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="specific_days">Specific Days</option>
+                    <option value="interval">Interval</option>
+                </select>
+            </mat-form-field>
+
+            @if (form.get('frequency')?.value === 'daily' || form.get('frequency')?.value === 'weekly') {
+            <mat-form-field class="flex-1">
+                <mat-label>Goal (per period)</mat-label>
+                <input matInput type="number" formControlName="goal" min="1">
+            </mat-form-field>
+            }
+        </div>
+
+        <!-- Specific Days Selector -->
+        @if (form.get('frequency')?.value === 'specific_days') {
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-slate-500 font-medium">Select Days</label>
+            <div class="flex gap-2">
+                @for (day of ['S','M','T','W','T','F','S']; track $index) {
+                <button type="button" class="w-8 h-8 rounded-full text-sm font-medium transition-colors"
+                    [class.bg-blue-500]="form.get('daysOfWeek')?.value?.includes($index)"
+                    [class.text-white]="form.get('daysOfWeek')?.value?.includes($index)"
+                    [class.bg-slate-100]="!form.get('daysOfWeek')?.value?.includes($index)"
+                    [class.text-slate-600]="!form.get('daysOfWeek')?.value?.includes($index)"
+                    (click)="toggleDay($index)">
+                    {{ day }}
+                </button>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Interval Selector -->
+        @if (form.get('frequency')?.value === 'interval') {
+        <mat-form-field class="w-full">
+            <mat-label>Repeat every X days</mat-label>
+            <input matInput type="number" formControlName="intervalDays" min="1">
+            <span matTextSuffix>days</span>
+        </mat-form-field>
+        }
+
+        <!-- Color Picker (Simple Select for MVP) -->
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-slate-500 font-medium">Color</label>
+            <div class="flex flex-wrap gap-2">
+                @for (color of colors; track color) {
+                <button type="button" class="w-8 h-8 rounded-full border-2 transition-transform hover:scale-110"
+                    [class.border-slate-800]="form.get('color')?.value === color"
+                    [class.border-transparent]="form.get('color')?.value !== color" [style.background-color]="color"
+                    (click)="form.patchValue({ color: color })">
+                </button>
+                }
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <mat-form-field class="w-full">
+            <mat-label>Notes (Optional)</mat-label>
+            <textarea matInput formControlName="notes" rows="3"
+                placeholder="Why do you want to build this habit?"></textarea>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="!pb-6 !px-6">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+        {{ isEditMode ? 'Save Changes' : 'Create Habit' }}
+    </button>
+</mat-dialog-actions>

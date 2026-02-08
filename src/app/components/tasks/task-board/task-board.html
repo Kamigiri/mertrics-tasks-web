@@ -1,0 +1,63 @@
+<div class="h-full w-full overflow-x-auto overflow-y-hidden bg-slate-50 p-6">
+  <div cdkDropListGroup class="h-full flex gap-6" cdkDropList cdkDropListOrientation="horizontal"
+    [cdkDropListData]="taskLists()" (cdkDropListDropped)="dropList($event)">
+    @for (list of taskLists(); track list.id) {
+    <div class="flex-shrink-0 w-80 flex flex-col h-full bg-slate-100 rounded-2xl border border-slate-200 shadow-sm"
+      cdkDrag [cdkDragData]="list">
+      <!-- List Header -->
+      <div class="p-3 flex flex-col bg-white rounded-t-2xl border-b border-slate-100 gap-2">
+        <div class="flex items-center justify-between cursor-grab active:cursor-grabbing" cdkDragHandle>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-700">{{ list.title }}</span>
+            <span class="bg-slate-100 text-slate-500 text-xs px-2 py-0.5 rounded-full font-medium">
+              {{ list.tasks?.length || 0 }}
+            </span>
+          </div>
+
+          <button mat-icon-button (click)="openAddTask(list.id)">
+            <mat-icon class="text-slate-600">add</mat-icon>
+          </button>
+        </div>
+
+        <!-- Controls: Sort & Visibility -->
+        <div class="flex items-center justify-between gap-1">
+          <mat-slide-toggle class="scale-75 origin-left" color="primary" [checked]="showCompletedStatus().get(list.id)"
+            (change)="toggleShowCompleted(list.id)">
+            <span class="text-xs text-slate-500">Completed</span>
+          </mat-slide-toggle>
+
+          <mat-button-toggle-group class="scale-75 origin-right h-8 border-none"
+            [value]="listSortStatus().get(list.id) || 'custom'" (change)="setSort(list.id, $event.value)"
+            hideSingleSelectionIndicator>
+            <mat-button-toggle value="custom" matTooltip="Custom (Drag)">
+              <mat-icon class="scale-75">drag_indicator</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="date" matTooltip="Due Date">
+              <mat-icon class="scale-75">calendar_today</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="alpha" matTooltip="A-Z">
+              <mat-icon class="scale-75">sort_by_alpha</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+
+      <!-- Tasks Container -->
+      <div class="flex-1 overflow-y-auto p-3 custom-scrollbar" cdkDropList [cdkDropListData]="list.tasks!"
+        (cdkDropListDropped)="dropTask($event, list.id)">
+        @for (task of getSortedTasks(list.id, list.tasks || []); track task.id) { @if (!task.hidden
+        && (showCompletedStatus().get(list.id) || task.status !== 'completed')) {
+        <div cdkDrag [cdkDragData]="task" [cdkDragDisabled]="(listSortStatus().get(list.id) || 'custom') !== 'custom'"
+          class="mb-3" [class.drag-disabled]="(listSortStatus().get(list.id) || 'custom') !== 'custom'">
+          <app-task-item [task]="task">
+          </app-task-item>
+          <!-- Placeholder -->
+          <div *cdkDragPlaceholder
+            class="h-20 bg-slate-200 border-2 border-dashed border-slate-300 rounded-xl mb-3 opacity-50"></div>
+        </div>
+        } }
+      </div>
+    </div>
+    }
+  </div>
+</div>

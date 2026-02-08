@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -9,17 +8,16 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022",
+    "target": "es6",
+    "module": "preserve",
     "lib": [
-      "ES2022",
-      "dom"
+      "es5",
+      "es6",
+      "dom",
+      "dom.iterable",
+      "ES2016"
     ]
   },
   "angularCompilerOptions": {
@@ -27,5 +25,11 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
 }

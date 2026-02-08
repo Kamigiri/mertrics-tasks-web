@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Task' : 'Add New Task' }}</h2>
+<mat-dialog-content class="!flex !flex-col !gap-4 !pt-4" [formGroup]="form">
+    <mat-form-field class="w-full">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter task title" (keydown.enter)="onSave()">
+        @if (form.get('title')?.invalid) {
+        <mat-error>Title is required</mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+        <mat-label>Details</mat-label>
+        <textarea matInput formControlName="details" rows="3" placeholder="Enter details"></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+        <mat-label>Due Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="due">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+</mat-dialog-content>
+<div class="p-6 pt-0 flex justify-end gap-2">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSave()">
+        {{ isEditMode ? 'Save Changes' : 'Create Task' }}
+    </button>
+</div>

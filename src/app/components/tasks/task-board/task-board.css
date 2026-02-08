@@ -1,0 +1,72 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Dragging Styles */
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 16px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    z-index: 1000 !important;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.5;
+}
+
+/* Hide toggle checkmark */
+::ng-deep .mat-button-toggle-label-content {
+    line-height: 0;
+}
+
+::ng-deep .mat-pseudo-checkbox {
+    display: none !important;
+}
+
+/* Center Icons in Toggle */
+mat-button-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+mat-button-toggle mat-icon {
+    margin: 0 !important;
+}
+
+/* Drag Disabled State */
+.drag-disabled {
+    cursor: default !important;
+}
+
+.drag-disabled:active {
+    cursor: default !important;
+}

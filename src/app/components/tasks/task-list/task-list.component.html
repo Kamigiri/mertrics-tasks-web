@@ -1,0 +1,38 @@
+<div class="max-w-3xl mx-auto p-6">
+  <!-- Header -->
+  <div class="mb-8 flex items-center justify-between">
+    <h2 class="text-3xl font-bold text-slate-800 tracking-tight">{{ title() }}</h2>
+    <button mat-icon-button class="text-slate-400 hover:text-slate-600">
+      <mat-icon>more_horiz</mat-icon>
+    </button>
+  </div>
+
+  <!-- Add Task Input -->
+  <div
+    class="mb-8 bg-white rounded-2xl shadow-sm border border-slate-100 p-2 flex items-center gap-2 focus-within:ring-2 ring-purple-100 transition-all">
+    <div class="h-10 w-10 flex items-center justify-center text-slate-400 bg-slate-50 rounded-xl">
+      <mat-icon>add</mat-icon>
+    </div>
+    <input type="text" placeholder="Add a task"
+      class="flex-1 bg-transparent border-none outline-none text-slate-700 placeholder:text-slate-400 h-10 px-2"
+      (keydown.enter)="addTask($event)" />
+  </div>
+
+  <!-- Tasks List -->
+  <div cdkDropList (cdkDropListDropped)="drop($event)" class="min-h-[200px]">
+    @for (task of tasks(); track task.id) { @if (!task.hidden) {
+    <div cdkDrag class="mb-2">
+      <!-- Custom Drag Placeholder -->
+      <div *cdkDragPlaceholder class="h-14 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl mb-2"></div>
+
+      <app-task-item [task]="task">
+      </app-task-item>
+    </div>
+    } } @empty {
+    <div class="flex flex-col items-center justify-center h-64 text-slate-400">
+      <mat-icon class="scale-150 mb-4 text-slate-200">check_circle</mat-icon>
+      <p>No tasks found</p>
+    </div>
+    }
+  </div>
+</div>

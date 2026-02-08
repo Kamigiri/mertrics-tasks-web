@@ -1,0 +1,37 @@
+<div
+  class="group flex items-center gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:shadow-md transition-all duration-200 cursor-pointer mb-2"
+  [class.opacity-60]="task().status === 'completed'" matRipple (click)="onItemClick($event)"
+  (mousedown)="onMouseDown()">
+  <!-- Drag Handle (Visible on Hover) -->
+  <div class="text-slate-300 opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity">
+    <mat-icon class="scale-75">drag_indicator</mat-icon>
+  </div>
+
+  <!-- Checkbox -->
+  <mat-checkbox [checked]="task().status === 'completed'" (change)="onStatusChange()" color="primary"
+    class="rounded-full">
+  </mat-checkbox>
+
+  <!-- Task Content -->
+  <div class="flex-1 min-w-0 flex flex-col">
+    <span class="text-sm font-medium text-slate-700 truncate decoration-slate-400 decoration-2 scroll-m-0"
+      [class.line-through]="task().status === 'completed'">
+      {{ task().title }}
+    </span>
+
+    @if (task().due) {
+    <div class="flex items-center gap-1 mt-0.5 text-xs" [class.text-red-500]="isOverdue()"
+      [class.text-slate-400]="!isOverdue()">
+      <mat-icon class="scale-50 -ml-1.5 h-4 w-4">event</mat-icon>
+      <span>{{ task().due | date : 'MMM d' }}</span>
+    </div>
+    }
+  </div>
+
+  <!-- Actions (Visible on Hover) -->
+  <div class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+    <button mat-icon-button class="text-slate-400 hover:text-red-500" (click)="onDelete(); $event.stopPropagation()">
+      <mat-icon class="scale-75">delete</mat-icon>
+    </button>
+  </div>
+</div>

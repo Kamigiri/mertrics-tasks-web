@@ -1,29 +1,26 @@
-# Stage 1: Build Angular app
-FROM node:20-alpine AS builder
+# Stage 1: Build the Angular application
+FROM node:20 as build
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+COPY package.json ./
 
 # Install dependencies
-RUN npm i --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
-# Copy source code
 COPY . .
 
-# Build Angular app for production
-ARG BASE_HREF=/mertrics-tasks/
-RUN npm run build -- --base-href=${BASE_HREF}
+# Build for production
+RUN npm run build -- --configuration production
 
 # Stage 2: Serve with Nginx
-FROM nginx:1.25-alpine
+FROM nginx:alpine
 
-# Copy custom nginx config
+# Copy the build output
+COPY --from=build /app/dist/mertrics-tasks-web/browser /usr/share/nginx/html
+
+# Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy built Angular app from builder stage
-COPY --from=builder /app/dist/*/browser /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
