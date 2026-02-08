@@ -28,7 +28,7 @@ import { BaseTaskContainer } from '../shared/base-task-container';
 export class TaskListComponent extends BaseTaskContainer {
   readonly title = input.required<string>();
   readonly tasks = input.required<Task[]>();
-  readonly listId = input<string>('');
+  readonly listId = input<string | undefined>('');
   readonly isMixedView = input<boolean>(false);
 
   drop(event: CdkDragDrop<string[]>) {
@@ -43,11 +43,15 @@ export class TaskListComponent extends BaseTaskContainer {
       console.warn('Cannot add tasks in mixed view');
       return;
     }
+    if(!this.listId()) {
+      console.warn('List ID is required to add a task');
+      return;
+    }
 
-    this.tasksService.createTask(this.listId(), {
+    this.tasksService.createTask(this.listId()!, {
       title: input.value.trim(),
       status: TaskStatus.NeedsAction
-    });
+    }).subscribe();
     input.value = '';
   }
 }

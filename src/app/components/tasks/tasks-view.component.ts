@@ -39,6 +39,7 @@ import { TasksService } from '../../services/tasks.service';
             <app-task-list 
               [title]="currentTitle()" 
               [tasks]="currentTasks()"
+              [listId]="currentTasks().length > 0 ? currentTasks()[0].listId : ''"
               (syncCompleted)="onSyncCompleted()">
             </app-task-list>
           }
@@ -121,28 +122,52 @@ export class TasksViewComponent {
     if (!lists.length) return [];
 
     // Flatten all tasks and attach listId to each task
-    const allTasks = lists.reduce((acc, l) => {
+    let result = lists.reduce((acc, l) => {
       const tasksWithListId = (l.tasks || []).map((t) => ({ ...t, listId: l.id }));
       return acc.concat(tasksWithListId);
     }, [] as Task[]);
 
     if (view === 'today') {
       const today = new Date().toISOString().split('T')[0];
-      return allTasks.filter((t) => t.due && t.due.startsWith(today));
+      result =  result.filter((t) => t.due && t.due.startsWith(today));
     }
 
     if (view === 'upcoming') {
       const today = new Date().toISOString().split('T')[0];
-      return allTasks.filter((t) => t.due && t.due > today);
+      result = result.filter((t) => t.due && t.due > today);
     }
 
     if (view === 'all') {
-      return allTasks;
+      return result;
     }
 
     // Specific List - view is the list ID
     const list = lists.find((l) => l.id === view);
-    return list ? (list.tasks || []).map((t) => ({ ...t, listId: list.id })) : [];
+    
+    result = list ? (list.tasks || []).map((t) => ({ ...t, listId: list.id })) : result ?? [];
+    return result.sort((a, b) => {
+      // 1. Sort by completion status (incomplete first)
+      if (a.completedAt !== b.completedAt) {
+        return a.completedAt ? 1 : -1;
+      }
+      
+      // 2. Sort by due date (earliest first, null/undefined last)
+      if (a.due !== b.due) {
+        if (!a.due) return 1;
+        if (!b.due) return -1;
+        return a.due.localeCompare(b.due);
+      }
+      
+      // 3. Sort by updatedAt (most recent first)
+      if (a.updated !== b.updated) {
+        if (!a.updated) return 1;
+        if (!b.updated) return -1;
+        return b.updated.localeCompare(a.updated);
+      }
+      
+      // 4. Sort by title (alphabetically)
+      return (a.title || '').localeCompare(b.title || '');
+    })
   });
 
   onSyncCompleted(): void {
