@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Task, TaskList, TaskStatus } from "../models/task.model";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +11,7 @@ export class TasksService {
     private apiUrl = environment.backendUrl;
     constructor(private http: HttpClient) { }
 
+    refresh$ = new BehaviorSubject<void>(undefined);
     // --- Lists ---
 
     /**
@@ -88,4 +89,5 @@ export class TasksService {
     sync(): Observable<any> {
         return this.http.post(`${this.apiUrl}/sync`, {});
     }
+
 }

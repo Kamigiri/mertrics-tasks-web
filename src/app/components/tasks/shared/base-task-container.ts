@@ -21,7 +21,9 @@ export abstract class BaseTaskContainer {
                 this.tasksService.createTask(listId, {
                     ...result.payload,
                     status: TaskStatus.NeedsAction
-                }).subscribe();
+                }
+            ).subscribe();
+
             }
         });
     }
