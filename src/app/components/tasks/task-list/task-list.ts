@@ -31,10 +31,6 @@ export class TaskListComponent extends BaseTaskContainer {
   readonly listId = input<string | undefined>('');
   readonly isMixedView = input<boolean>(false);
 
-  drop(event: CdkDragDrop<string[]>) {
-    // In a real app, we would emit this change to the parent/service
-  }
-
   addTask(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.value.trim()) return;

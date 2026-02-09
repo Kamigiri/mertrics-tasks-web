@@ -72,7 +72,9 @@ export class TaskItemComponent {
 
     dialogRef.afterClosed().subscribe((result: TaskDialogResult | undefined) => {
       if (result && result.action === TaskDialogAction.Save && result.payload) {
-        this.tasksService.updateTask(this.task().id, result.payload).subscribe();
+        this.tasksService.updateTask(this.task().id, result.payload).subscribe(() => {
+        this.tasksService.refresh$.next();
+        });
       }
     });
   }

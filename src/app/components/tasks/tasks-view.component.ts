@@ -69,8 +69,7 @@ export class TasksViewComponent {
   private tasksService = inject(TasksService);
   private route = inject(ActivatedRoute);
 
-  readonly refresh$ = new BehaviorSubject<void>(undefined);
-
+  readonly refresh$ = this.tasksService.refresh$;
   // Get view mode from route
   readonly viewMode = toSignal(
     this.route.url.pipe(

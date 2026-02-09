@@ -9,6 +9,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task } from '../../../models/task.model';
 import { TaskDialogData, TaskDialogMode, TaskDialogResult, TaskDialogAction } from './task-dialog.model';
+import moment from 'moment';
 
 @Component({
     selector: 'app-task-dialog',
@@ -62,7 +63,8 @@ export class TaskDialogComponent implements OnInit {
         const payload: Partial<Task> = {
             title: formVal.title || '',
             notes: formVal.details || '',
-            due: formVal.due ? formVal.due.toISOString() : undefined,
+
+            due: formVal.due ? moment.utc(formVal.due).startOf('day').add(1, 'day').format('YYYY-MM-DDTHH:mm:ss[Z]') : undefined,
         };
 
         // If editing, preserve ID
@@ -74,5 +76,6 @@ export class TaskDialogComponent implements OnInit {
             action: TaskDialogAction.Save,
             payload
         } as TaskDialogResult);
+    
     }
 }
